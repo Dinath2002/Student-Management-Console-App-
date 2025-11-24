@@ -14,10 +14,14 @@ public class Main {
             switch (choice) {
                 case 1 -> addStudentFlow(manager);
                 case 2 -> manager.displayAllStudents();
-                case 3 -> searchStudentFlow(manager);
-                case 4 -> updateStudentFlow(manager);
-                case 5 -> removeStudentFlow(manager);
-                case 6 -> {
+                case 3 -> manager.displayStudents(manager.getStudentsSortedByName(), "📑 Students Sorted by Name");
+                case 4 -> manager.displayStudents(manager.getStudentsSortedByAge(), "⏳ Students Sorted by Age");
+                case 5 -> searchStudentByIdFlow(manager);
+                case 6 -> searchStudentsByNameFlow(manager);
+                case 7 -> updateStudentFlow(manager);
+                case 8 -> removeStudentFlow(manager);
+                case 9 -> showStats(manager);
+                case 10 -> {
                     System.out.println("👋 Exiting program...");
                     running = false;
                 }
@@ -32,10 +36,14 @@ public class Main {
         System.out.println("===== Student Management System =====");
         System.out.println("1. Add Student");
         System.out.println("2. View All Students");
-        System.out.println("3. Search Student");
-        System.out.println("4. Update Student");
-        System.out.println("5. Remove Student");
-        System.out.println("6. Exit");
+        System.out.println("3. View Sorted by Name");
+        System.out.println("4. View Sorted by Age");
+        System.out.println("5. Search Student by ID");
+        System.out.println("6. Search Students by Name");
+        System.out.println("7. Update Student");
+        System.out.println("8. Remove Student");
+        System.out.println("9. Show Stats");
+        System.out.println("10. Exit");
     }
 
     private static void addStudentFlow(StudentManager manager) {
@@ -51,7 +59,7 @@ public class Main {
         }
     }
 
-    private static void searchStudentFlow(StudentManager manager) {
+    private static void searchStudentByIdFlow(StudentManager manager) {
         String id = readNonEmpty("Enter Student ID to search: ");
         Student student = manager.findStudent(id);
         if (student == null) {
@@ -62,6 +70,16 @@ public class Main {
         System.out.println("\nFound student:");
         student.displayInfo();
         System.out.println();
+    }
+
+    private static void searchStudentsByNameFlow(StudentManager manager) {
+        String namePart = readNonEmpty("Enter part of the name to search: ");
+        var matches = manager.findByName(namePart);
+        if (matches.isEmpty()) {
+            System.out.println("⚠️ No matches found for: " + namePart + "\n");
+            return;
+        }
+        manager.displayStudents(matches, "🔎 Matches for \"" + namePart + "\"");
     }
 
     private static void updateStudentFlow(StudentManager manager) {
@@ -103,6 +121,16 @@ public class Main {
         } else {
             System.out.println("Removal canceled.\n");
         }
+    }
+
+    private static void showStats(StudentManager manager) {
+        var stats = manager.calculateStats();
+        if (stats.count() == 0) {
+            System.out.println("No students to summarize.\n");
+            return;
+        }
+        System.out.printf("%n📈 Stats:%n - Count: %d%n - Youngest age: %d%n - Oldest age: %d%n - Average age: %.1f%n%n",
+                stats.count(), stats.minAge(), stats.maxAge(), stats.averageAge());
     }
 
     private static boolean confirmAction(String prompt) {

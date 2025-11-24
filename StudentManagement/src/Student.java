@@ -5,9 +5,9 @@ public class Student {
 
     // Constructor
     public Student(String name, int age, String id) {
-        this.name = name.trim();
+        this.name = safeTrim(name);
         this.age = age;
-        this.id = id.trim();
+        this.id = safeTrim(id);
     }
 
     // Getters and Setters
@@ -16,7 +16,7 @@ public class Student {
     }
 
     public void setName(String name) {
-        this.name = name.trim();
+        this.name = safeTrim(name);
     }
 
     public int getAge() {
@@ -32,7 +32,7 @@ public class Student {
     }
 
     public void setId(String id) {
-        this.id = id.trim();
+        this.id = safeTrim(id);
     }
 
     // Display info
@@ -43,5 +43,9 @@ public class Student {
     @Override
     public String toString() {
         return "ID: " + id + " | Name: " + name + " | Age: " + age;
+    }
+
+    private String safeTrim(String value) {
+        return value == null ? "" : value.trim();
     }
 }
